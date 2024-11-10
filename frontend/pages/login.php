@@ -11,24 +11,27 @@
 
 <body>
     <div class="container">
+        <!-- Logo fuera del formulario, pero dentro del contenedor -->
+        <div class="logo-container text-center mb-4">
+            <img src="/frontend/assets/images/nutrirecomienda-logo-v6.png" alt="Logo NutriRecomienda" class="logo">
+        </div>
+        
         <div class="form-container">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
             <form action="login.php" method="POST">
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" required
-                        placeholder="Ingresa tu correo electrónico">
+                    <input type="email" class="form-control" id="email" name="email" required placeholder="Ingresa tu correo electrónico">
                 </div>
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="password" class="form-control" id="password" name="password" required
-                        placeholder="Ingresa tu contraseña">
+                    <input type="password" class="form-control" id="password" name="password" required placeholder="Ingresa tu contraseña">
                 </div>
                 <div class="form-group text-center">
                     <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
                 </div>
                 <div class="form-group text-center">
-                    <p>¿No tienes cuenta? <a href="register.html">Regístrate aquí</a></p>
+                    <p>¿No tienes cuenta? <a href="/frontend/pages/register.php">Regístrate aquí</a></p>
                 </div>
             </form>
         </div>

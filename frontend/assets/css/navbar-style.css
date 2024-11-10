@@ -1,0 +1,19 @@
+
+.custom-link {
+    font-size: 25px; 
+    font-weight: bold; 
+}
+
+.navbar-nav {
+    text-align: center;
+    width: 100%;
+    justify-content: center; 
+}
+
+.navbar-collapse {
+    width: 100%;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 30px; 
+}

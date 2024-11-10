@@ -6,13 +6,15 @@ body {
   height: 100vh;
   margin: 0;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  justify-content: flex-end; 
+  align-items: center; 
 }
 
 .container {
-  max-width: 500px;
   width: 100%;
+  max-width: 400px;
+  padding-left: 0;
+  margin-left: 0; 
 }
 
 .form-container {
@@ -22,6 +24,18 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   max-width: 400px;
   margin-left: 0;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: flex-start;  
+  margin-bottom: 20px;  
+  left: 100px;
+}
+
+.logo {
+  width: 300px;  
+  height: auto;
 }
 
 h2 {
@@ -45,3 +59,5 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+

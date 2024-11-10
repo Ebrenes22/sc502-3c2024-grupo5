@@ -1,5 +1,5 @@
-<?php include 'components/navbar.php'; ?>
 <?php include 'components/header.php'; ?>
+<?php include 'components/navbar.php'; ?>
 <div class="container">
 <?php
     if (isset($page)) {

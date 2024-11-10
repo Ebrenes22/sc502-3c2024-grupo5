@@ -39,7 +39,7 @@
                     <button type="submit" class="btn btn-primary btn-block">Registrarse</button>
                 </div>
                 <div class="form-group text-center">
-                    <p>¿Ya tienes una cuenta? <a href="login.html">Inicia sesión aquí</a></p>
+                    <p>¿Ya tienes una cuenta? <a href="/frontend/pages/login.php">Inicia sesión aquí</a></p>
                 </div>
             </form>
         </div>
