@@ -1,0 +1,14 @@
+.monthly-progress li {
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.monthly-progress li:last-child {
+    border-bottom: none;
+}
+
+.progress-card:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+    transition: all 0.3s ease;
+}
