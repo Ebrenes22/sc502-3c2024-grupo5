@@ -11,14 +11,13 @@
 
 <body>
     <div class="container">
-        <!-- Logo fuera del formulario, pero dentro del contenedor -->
         <div class="logo-container text-center mb-4">
             <img src="/frontend/assets/images/nutrirecomienda-logo-v6.png" alt="Logo NutriRecomienda" class="logo">
         </div>
         
         <div class="form-container">
             <h2 class="text-center mb-4">Iniciar Sesión</h2>
-            <form action="login.php" method="POST">
+            <form action="/backend/login.php" method="POST">
                 <div class="form-group">
                     <label for="email">Correo Electrónico</label>
                     <input type="email" class="form-control" id="email" name="email" required placeholder="Ingresa tu correo electrónico">
@@ -37,10 +36,12 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- Librerías necesarias de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 
 </html>
+

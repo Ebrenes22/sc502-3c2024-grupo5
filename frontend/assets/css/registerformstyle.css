@@ -1,0 +1,82 @@
+/* Estilos generales del cuerpo */
+body {
+    background-image: url("/frontend/assets/images/fondologin2.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Estilos del contenedor del formulario */
+.form-container {
+    width: 80%;
+    max-width: 900px; /* Ancho máximo del formulario */
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Estilo de los campos de formulario */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+    justify-content: center; /* Alinea los contenidos de cada campo al centro */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.form-group input, .form-group select {
+    width: 100%; /* Los campos ocuparán todo el ancho disponible dentro del contenedor */
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* Botón de registro */
+.submit-button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Estilo para el botón cuando se pasa el ratón */
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.form-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .form-container {
+        width: 90%;
+    }
+}
