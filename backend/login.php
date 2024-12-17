@@ -38,7 +38,7 @@ if ($method === 'POST') {
         }
 
         if (login($email, $password)) {
-            header("Location: index.php");
+            header("Location: /frontend/index.php");
             exit;   
         } else {
             http_response_code(401);
