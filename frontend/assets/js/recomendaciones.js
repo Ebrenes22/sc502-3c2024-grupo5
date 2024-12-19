@@ -93,250 +93,222 @@ const rutinas = [
 ];
 
 document.addEventListener('DOMContentLoaded', function () {
+    let progresos = [];
+    let recomendaciones = [];
+    let idprogreso = 0;
+    let recomendacionesGuardar = [];
+    const API_URL2 = '/backend/progress.php'; // Endpoint para cargar progreso
+    const API_URL = '/backend/recommendations.php'; // Endpoint para guardar recomendaciones
 
-    function generarRecomendaciones(rutina) {
+    async function loadProgress() {
+        try {
+            const response = await fetch(API_URL2, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = 'index.php';
+                }
+                throw new Error('Error al obtener progreso');
+            }
+
+            progresos = await response.json();
+            renderProgressWithRecommendations(progresos);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function generarRecomendaciones(progreso) {
         const recomendaciones = [];
 
-        // Recomendación basada en el sueño
-        if (rutina.sueno < 7) {
+        if (progreso.hours_sleep < 7) {
             recomendaciones.push("Intenta dormir al menos 7 horas para mejorar tu descanso.");
         }
 
-        // Recomendación basada en la variedad de alimentos
-        const comidas = ["desayuno", "almuerzo", "cena"];
-        comidas.forEach(comida => {
-            const alimentos = rutina.alimentacion[0][comida];
-            if (alimentos.length < 3) {
-                const sugerencia = comidaRecomendacion[Math.floor(Math.random() * comidaRecomendacion.length)];
-                recomendaciones.push(`Para una dieta más balanceada en el ${comida}, considera agregar opciones como: ${sugerencia.join(", ")}.`);
-            }
-        });
-
-        const totalDuracion = rutina.ejercicios[0].detalles.reduce((total, ejercicio) => total + parseInt(ejercicio.duracion), 0);
-        const tiposEjercicio = new Set(rutina.ejercicios[0].detalles.map(ejercicio => ejercicio.tipo));
-        
-        if (totalDuracion < 30) {
-            recomendaciones.push("Considera aumentar el tiempo total de ejercicio a al menos 30 minutos.");
+        const alimentosTotales = progreso.meats.length;
+        if (alimentosTotales < 3) {
+            recomendaciones.push("Intenta incluir más alimentos variados en tu dieta para balancearla.");
         }
-        if (tiposEjercicio.size < 2) {
-            recomendaciones.push("Añade variedad a tu rutina de ejercicios para trabajar diferentes grupos musculares.");
+
+        if (progreso.distance_km < 5) {
+            recomendaciones.push("Considera aumentar tu distancia total diaria a al menos 5 km.");
+        }
+
+        if (progreso.exercises_completed < 2) {
+            recomendaciones.push("Incluye variedad en tu rutina de ejercicios para trabajar diferentes grupos musculares.");
         }
 
         return recomendaciones;
     }
 
-    function loadRutinas() {
-        const routineList = document.getElementById('routine-list');
-        routineList.innerHTML = '';
-        rutinas.forEach(function (rutina) {
-            const recomendaciones = generarRecomendaciones(rutina);
+    function renderProgressWithRecommendations(progresos) {
+        const progressList = document.getElementById('progress-list');
+        progressList.innerHTML = '';
 
-            const rutinaCard = document.createElement('div');
-            rutinaCard.className = 'col-md-4 mb-3';
-            rutinaCard.innerHTML = `
-            <div class="card border-info">
-                <img src="assets/images/fondotarjetarecomendacion.jpg" class="card-img-top" >
-                <div class="card-body">
-                    <h5 class="card-header">Rutina del ${rutina.date}</h5>
-                    <p class="card-text"><strong>Hora de levantarse:</strong> ${rutina.horaLevantarse}</p>
-                    <p class="card-text"><strong>Sueño:</strong> ${rutina.sueno} horas</p>
-                    <p class="card-text"><strong>Ritmo Cardíaco:</strong> ${rutina.ritmoCardiaco} bpm</p>
-                    <p class="card-text"><strong>Peso:</strong> ${rutina.peso} kg</p>
-                    <p class="card-text"><strong>Calorías Quemadas:</strong> ${rutina.caloriasQuemadas} kcal</p>
-                    <p class="card-text"><strong>Estrés:</strong> ${rutina.estres}%</p>
-                    <p class="card-text"><strong>Hidratación:</strong> ${rutina.hidratacion} vasos</p>
-                    
-                    <h6>Alimentación</h6>
-                    <ul>
-                        <li><strong>Desayuno:</strong> ${rutina.alimentacion[0].desayuno.join(', ')}</li>
-                        <li><strong>Almuerzo:</strong> ${rutina.alimentacion[0].almuerzo.join(', ')}</li>
-                        <li><strong>Cena:</strong> ${rutina.alimentacion[0].cena.join(', ')}</li>
-                    </ul>
-                    
-                    <h6>Ejercicios</h6>
-                    <ul>
-                        ${rutina.ejercicios[0].detalles.map(ejercicio => `
-                            <li><strong>${ejercicio.tipo}</strong> - Duración: ${ejercicio.duracion} mins, Repeticiones: ${ejercicio.repeticiones}</li>
-                        `).join('')}
-                    </ul>
+        progresos.forEach(progreso => {
+            const recomendaciones = generarRecomendaciones(progreso);
 
-                    <div class="card-footer">
-                    ${recomendaciones.length > 0 ? `
+            const card = document.createElement('div');
+            card.className = 'col-md-4 mb-3';
+            card.innerHTML = `
+                <div class="card border-info">
+                    <div class="card-body">
+                        <h5 class="card-title">Progreso del ${progreso.recorded_at}</h5>
+                        <p class="card-text"><strong>Sueño:</strong> ${progreso.hours_sleep} horas</p>
+                        <p class="card-text"><strong>Distancia Recorrida:</strong> ${progreso.distance_km} km</p>
+                        <p class="card-text"><strong>Peso:</strong> ${progreso.weight} kg</p>
+                        <p class="card-text"><strong>Calorías Quemadas:</strong> ${progreso.calories_burned} kcal</p>
+                        
                         <h6>Recomendaciones</h6>
-                        <ul>
+                        <ul id="recommendation-${progreso.progress_id}">
                             ${recomendaciones.map(rec => `<li>${rec}</li>`).join('')}
                         </ul>
-                    ` : ''}
+                        
+                        <button class="btn btn-primary save-recommendation" data-id="${progreso.progress_id}">
+                            Guardar Recomendación
+                        </button>
                     </div>
-                    
-
                 </div>
-            </div>
             `;
-            routineList.appendChild(rutinaCard);
+            progressList.appendChild(card);
         });
-    }
-    function renderGraficaSueno() {
-        const fechas = rutinas.map(rutina => rutina.date);
-        const horasSueno = rutinas.map(rutina => rutina.sueno);
 
-        const ctx = document.getElementById('graficaSueno').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fechas,
-                datasets: [{
-                    label: 'Horas de Sueño',
-                    data: horasSueno,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 2,
-                    fill: true,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Horas'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Fecha'
-                        }
-                    }
-                }
+        // Agregar evento a los botones de guardar recomendación
+        const saveButtons = document.querySelectorAll('.save-recommendation');
+        saveButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            idprogreso = button.dataset.id;
+            recomendacionesGuardar = Array.from(document.querySelectorAll(`#recommendation-${idprogreso} li`)).map(li => li.textContent);
+
+            //const recommendations = Array.from(recommendationsList.querySelectorAll('li')).map(li => li.textContent
+
+
+            const modal = new bootstrap.Modal(document.getElementById('recommendationsModal'));
+            modal.show();
+        });
+
+        });
+        
+        
+    }
+
+    document.getElementById('recommendations-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+    
+        // Obtener los valores de los campos
+        const type = document.getElementById("type").value;
+        const minWeight = document.getElementById("min-weight").value;
+        const maxWeight = document.getElementById("max-weight").value;
+    
+        // Crear el objeto para enviar
+        const recommendationData = {
+            type: type.trim(),
+            progress_id: parseInt(idprogreso, 10),
+            description: recomendacionesGuardar.join(', '),
+            min_weight: parseFloat(minWeight),
+            max_weight: parseFloat(maxWeight)
+        };
+    
+        console.log("Enviando datos:", recommendationData);
+    
+        try {
+            // Crear nueva recomendación
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(recommendationData),
+                credentials: "include"
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error al crear la recomendación:", errorData);
+                return;
             }
-        });
-    }
+    
+            // Cerrar el modal
+            //var modal = bootstrap.Modal.getInstance(document.getElementById('recommendationsModal'));
+           // modal.hide();
+    
+            // Recargar la lista de recomendaciones
+            loadRecommendations();
+        } catch (error) {
+            console.error("Ocurrió un error al guardar la recomendación:", error);
+        }
+    });
+    
 
-    function renderGraficaAgua() {
-        const fechas = rutinas.map(rutina => rutina.date);
-        const vasosAgua = rutinas.map(rutina => rutina.hidratacion);
+    async function loadRecommendations() {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                credentials: 'include',
+            });
 
-        const ctx = document.getElementById('graficaAgua').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fechas,
-                datasets: [{
-                    label: 'Vasos de Agua',
-                    data: vasosAgua,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 2,
-                    fill: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Vasos'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Fecha'
-                        }
-                    }
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = 'index.php';
                 }
+                throw new Error('Error al obtener progreso');
             }
+
+            recomendaciones = await response.json();
+            renderRecommendations(recomendaciones);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+    
+    function renderRecommendations(recommendations) {
+        const recommendationList = document.getElementById('recommendation-list');
+        recommendationList.innerHTML = '';
+    
+        recommendations.forEach(recommendation => {
+            const card = document.createElement('div');
+            card.className = 'col-md-4 mb-3';
+            card.innerHTML = `
+                <div class="card border-info">
+                    <div class="card-body">
+                        <h5 class="card-title">${recommendation.type}</h5>
+                        <p class="card-text"><strong>Descripción:</strong> ${recommendation.description}</p>
+                        <p class="card-text"><strong>Peso Mínimo:</strong> ${recommendation.min_weight} kg</p>
+                        <p class="card-text"><strong>Peso Máximo:</strong> ${recommendation.max_weight} kg</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                    <button class="btn btn-danger btn-sm delete-recommendation" data-id="${recommendation.recommendations_id}">Delete</button>
+                </div>
+                </div>
+            `;
+            recommendationList.appendChild(card);
+        });
+
+        document.querySelectorAll('.delete-recommendation').forEach(function (button) {
+            button.addEventListener('click', handleDeleteRecommendation);
         });
     }
 
-    function renderGraficaCardio() {
-        const fechas = rutinas.map(rutina => rutina.date);
-        const ritmo = rutinas.map(rutina => rutina.ritmoCardiaco);
-
-        const ctx = document.getElementById('graficaCardio').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fechas,
-                datasets: [{
-                    label: 'Ritmo Cardíaco Promedio',
-                    data: ritmo,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 2,
-                    fill: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Ritmo Cardíaco'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Fecha'
-                        }
-                    }
-                }
-            }
+    async function handleDeleteRecommendation(event) {
+        const id = parseInt(event.target.dataset.id);
+        const response = await fetch(`${API_URL}?recommendations_id=${id}`,{
+            method: 'DELETE',
+            credentials: 'include'
         });
+        if (!response.ok) {
+            loadRecommendations();
+        } else {
+            console.error("Error eliminando el progreso");
+        }
     }
-
-    function renderGraficaCalorias() {
-        const fechas = rutinas.map(rutina => rutina.date);
-        const calorias = rutinas.map(rutina => rutina.caloriasQuemadas);
-
-        const ctx = document.getElementById('graficaCalorias').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: fechas,
-                datasets: [{
-                    label: 'Calorías Quemadas',
-                    data: calorias,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderWidth: 2,
-                    fill: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Vasos'
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Fecha'
-                        }
-                    }
-                }
-            }
-        });
-    }
+    
 
 
-
-    loadRutinas();
-    renderGraficaSueno();
-    renderGraficaAgua();
-    renderGraficaCalorias();
-    renderGraficaCardio();
+    // Inicializar carga de progreso
+    loadProgress();
+    loadRecommendations();
 });
+
