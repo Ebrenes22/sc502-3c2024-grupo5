@@ -48,7 +48,7 @@ $page = 'alimentos.php';
             <input type="text" class="form-control" id="food_name" name="food_name" required>
         </div>
         <div class="form-group">
-            <label for="portion_size">Tamaño de la porción</label>
+            <label for="portion_size">Tamaño de la porción (gramos)</label>
             <input type="number" class="form-control" id="portion_size" name="portion_size" required>
         </div>
         <div class="form-group">
