@@ -4,8 +4,8 @@ require 'message_log.php';
 $host = 'localhost';
 $dbname = 'nutrirecomienda';
 $user = 'root';
-$password = 'Zeon';
-$port = '3307';
+$password = 'test123';
+$port = '3306';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port", $user, $password);
