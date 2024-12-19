@@ -25,16 +25,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Obtener valores de los campos
         const fields = [
-            { name: "Nombre Completo", value: document.getElementById('fullname').value },
-            { name: "Correo Electrónico", value: document.getElementById('email').value },
-            { name: "Edad", value: document.getElementById('age').value },
-            { name: "Peso", value: document.getElementById('weight').value },
-            { name: "Altura", value: document.getElementById('height').value },
-            { name: "Género", value: document.getElementById('gender').value },
-            { name: "Meta Calorías", value: document.getElementById('daily_calorie_goal').value },
-            { name: "Contraseña", value: document.getElementById('password').value },
-            { name: "Confirmar Contraseña", value: document.getElementById('confirm_password').value },
+            { name: "fullname", value: document.getElementById('fullname').value },
+            { name: "email", value: document.getElementById('email').value },
+            { name: "age", value: document.getElementById('age').value },
+            { name: "weight", value: document.getElementById('weight').value },
+            { name: "height", value: document.getElementById('height').value },
+            { name: "gender", value: document.getElementById('gender').value },
+            { name: "daily_calorie_goal", value: document.getElementById('daily_calorie_goal').value },
+            { name: "password", value: document.getElementById('password').value },
+            { name: "confirm_password", value: document.getElementById('confirm_password').value },
         ];
+        
 
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm_password').value;
@@ -54,29 +55,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Preparar datos del formulario
         const formData = new URLSearchParams();
-        fields.forEach(field => formData.append(field.name.toLowerCase().replace(/ /g, "_"), field.value));
+        fields.forEach(field => {
+            formData.append(field.name, field.value); // Añadir los campos al formData
+        });
 
         try {
             // Enviar datos al servidor
             const response = await fetch('/backend/register.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData.toString(),
+                body: formData.toString(), // Enviar los datos correctamente formateados
             });
 
             const result = await response.json();
 
-            if (response.ok) {
+            if (result.message === "Registro exitoso.") {
                 showMessage('success', result.message);
                 setTimeout(() => {
                     registerError.innerHTML = "";
-                    window.location.href = "/frontend/pages/login.php";
-                }, 3000);
+                    window.location.href = "/frontend/pages/login.php"; // Redirigir al login
+                }, 4000); // Esperar 2 segundos antes de redirigir
             } else {
-                showMessage('danger', result.error);
+                showMessage('danger', result.message); // Mostrar error si no fue exitoso
             }
         } catch (error) {
-            showMessage('danger', "Hubo un problema con el registro. Intenta nuevamente más tarde.");
+            showMessage('danger', "Hubo un problema al enviar los datos. Intente nuevamente.");
         }
     });
 });

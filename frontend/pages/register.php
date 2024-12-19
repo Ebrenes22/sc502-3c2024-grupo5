@@ -60,8 +60,6 @@
                         <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Confirma tu contraseña">
                     </div>
                 </div>
-                <!-- Campo role_id oculto -->
-                <input type="hidden" id="role_id" name="role_id">
                 <div class="form-group text-center">
                     <div id="register-error"></div>
                     <button type="submit" class="btn btn-primary">Registrarse</button>

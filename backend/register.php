@@ -2,7 +2,7 @@
 require('db.php'); 
 header('Content-Type: application/json');
 
-function userRegistry($fullname, $email, $age, $weight, $height, $gender, $daily_calorie_goal, $password, $role_id = 2)
+function userRegistry($fullname, $email, $age, $weight, $height, $gender, $daily_calorie_goal, $password)
 {
     try {
         global $pdo;
@@ -10,20 +10,19 @@ function userRegistry($fullname, $email, $age, $weight, $height, $gender, $daily
         // Hashear la contraseña
         $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO users (fullname, email, age, weight, height, gender, daily_calorie_goal, password, role_id) 
-                VALUES (:fullname, :email, :age, :weight, :height, :gender, :daily_calorie_goal, :password, :role_id)";
+        $sql = "INSERT INTO users (fullname, email, age, weight, height, gender, daily_calorie_goal, password) 
+                VALUES (:fullname, :email, :age, :weight, :height, :gender, :daily_calorie_goal, :password)";
         $stmt = $pdo->prepare($sql);
 
         $stmt->execute([
-            ':fullname' =>$fullname,
+            ':fullname' => $fullname,
             ':email' => $email,
             ':age' => (int)$age,
             ':weight' => (float)$weight,
             ':height' => (float)$height,
-            ':gender' =>$gender,
+            ':gender' => $gender,
             ':daily_calorie_goal' => (int)$daily_calorie_goal,
-            ':password' => $passwordHashed,
-            ':role_id' => (int)$role_id
+            ':password' => $passwordHashed
         ]);
 
         return true;
@@ -36,6 +35,9 @@ function userRegistry($fullname, $email, $age, $weight, $height, $gender, $daily
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method == 'POST') {
+     // Imprimir todo lo que llega en $_POST para depuración
+     error_log(print_r($_POST, true)); // Esto imprimirá los datos recibidos en el log de errores de PHP
+
     if (isset($_POST['fullname'], $_POST['email'], $_POST['age'], $_POST['weight'], $_POST['height'], $_POST['gender'], $_POST['daily_calorie_goal'], $_POST['password'], $_POST['confirm_password'])) {
 
         // Campos requeridos
@@ -95,17 +97,11 @@ if ($method == 'POST') {
         // Llamar a la función de registro
         if (userRegistry($fullname, $email, $age, $weight, $height, $gender, $daily_calorie_goal, $password)) {
             http_response_code(201);
-            echo json_encode(["message" => "Usuario registrado exitosamente"]);
+            echo json_encode(["message" => "Registro exitoso."]);
         } else {
             http_response_code(500);
             echo json_encode(["error" => "No se pudo completar el registro. Intente más tarde."]);
         }
-    } else {
-        http_response_code(400);
-        echo json_encode(["error" => "Campos faltantes"]);
     }
-} else {
-    http_response_code(405);
-    echo json_encode(["error" => "Método no permitido"]);
 }
 ?>
