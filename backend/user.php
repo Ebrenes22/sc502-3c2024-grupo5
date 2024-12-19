@@ -1,6 +1,4 @@
 <?php
-session_start();  // Asegúrate de iniciar la sesión
-
 /**
  * Obtiene información del usuario desde la sesión.
  * 
