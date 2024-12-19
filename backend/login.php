@@ -12,7 +12,16 @@ function login($email, $password)
         $user = $stmt->fetch(PDO::FETCH_ASSOC); // Arreglo asociativo con los datos del usuario
 
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user["user_id"];
+            // Almacenar los datos del usuario en la sesión
+            $_SESSION['user'] = [
+                'user_id' => $user['user_id'],
+                'fullname' => $user['fullname'],
+                'email' => $user['email'],
+                'age' => $user['age'],
+                'gender' => $user['gender'],
+                'height' => $user['height'],
+                'weight' => $user['weight']
+            ];
             session_regenerate_id(true); // Regenera el ID de sesión para mayor seguridad
             return true;
         }
@@ -26,21 +35,24 @@ function login($email, $password)
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
-
     if (isset($_POST['email']) && isset($_POST['password'])) {
         $email = $_POST['email'];
         $password = $_POST['password'];
 
+        // Validación del correo electrónico
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
             echo json_encode(["error" => "Email no válido"]);
             exit;
         }
 
+        // Intentar iniciar sesión
         if (login($email, $password)) {
+            // Redirigir a la página principal si el login es exitoso
             header("Location: /frontend/index.php");
-            exit;   
+            exit;
         } else {
+            // En caso de credenciales incorrectas
             http_response_code(401);
             echo json_encode(["error" => "Credenciales incorrectas"]);
         }
@@ -52,4 +64,3 @@ if ($method === 'POST') {
     http_response_code(405);
     echo json_encode(["error" => "Método no permitido"]);
 }
-?>

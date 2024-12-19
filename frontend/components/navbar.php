@@ -1,6 +1,5 @@
+<link rel="stylesheet" href="/frontend/assets/css/navbar-style.css">
 
-<link rel="stylesheet" href="/frontend/assets/css/navbar-style.css
-">
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="index.php">
@@ -23,9 +22,13 @@
                 <li class="nav-item">
                     <a class="nav-link custom-link" href="index.php?page=progreso.php">Progreso</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link custom-link" href="index.php?page=profile.php">Perfil</a>
-                </li>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <!-- Si hay un usuario en sesión, mostrar la opción de perfil -->
+                    <li class="nav-item">
+                        <a class="nav-link custom-link" href="index.php?page=profile.php">Perfil</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
