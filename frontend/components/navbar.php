@@ -23,7 +23,8 @@
                     <a class="nav-link custom-link" href="index.php?page=progreso.php">Progreso</a>
                 </li>
 
-                <?php if (isset($_SESSION['user'])): ?>
+                <?php if (isset($_SESSION['user_id'])):?>
+                    
                     <!-- Si hay un usuario en sesión, mostrar la opción de perfil -->
                     <li class="nav-item">
                         <a class="nav-link custom-link" href="index.php?page=profile.php">Perfil</a>

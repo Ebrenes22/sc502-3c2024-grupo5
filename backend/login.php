@@ -13,7 +13,15 @@ function login($email, $password)
 
         if ($user && password_verify($password, $user['password'])) {
             // Almacenar los datos del usuario en la sesión
-            $_SESSION['user'] = [
+            $_SESSION['user_id'] = $user['user_id'];
+            $_SESSION['fullname'] = $user['fullname'];
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['age'] = $user['age'];
+            $_SESSION['gender'] = $user['gender'];
+            $_SESSION['height'] = $user['height'];
+            $_SESSION['weight'] = $user['weight'];
+
+            /*$_SESSION['user'] = [
                 'user_id' => $user['user_id'],
                 'fullname' => $user['fullname'],
                 'email' => $user['email'],
@@ -21,7 +29,7 @@ function login($email, $password)
                 'gender' => $user['gender'],
                 'height' => $user['height'],
                 'weight' => $user['weight']
-            ];
+            ];*/
             session_regenerate_id(true); // Regenera el ID de sesión para mayor seguridad
             return true;
         }

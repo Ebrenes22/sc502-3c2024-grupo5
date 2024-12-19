@@ -3,11 +3,11 @@ $page = 'profile.php';
 require_once ('../backend/user.php');
 
 // Obtener los datos del usuario desde la sesión
-$fullname = $_SESSION['user']['fullname'];
-$age = $_SESSION['user']['age'];
-$gender = $_SESSION['user']['gender'];
-$height = $_SESSION['user']['height'];
-$weight = $_SESSION['user']['weight'];
+$fullname = $_SESSION['fullname'];
+$age = $_SESSION['age'];
+$gender = $_SESSION['gender'];
+$height = $_SESSION['height'];
+$weight = $_SESSION['weight'];
 ?>
 
 <link rel="stylesheet" href="/frontend/assets/css/cards-style-profile.css">

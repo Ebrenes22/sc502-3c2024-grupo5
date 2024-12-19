@@ -10,10 +10,10 @@ session_start();
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto justify-content-end">
-            <?php if (isset($_SESSION['user'])): ?>
+            <?php if (isset($_SESSION['user_id'])): ?>
                 <!-- Si hay un usuario en sesión, mostrar el nombre del usuario y la opción de cerrar sesión -->
                 <li class="nav-item">
-                    <span class="nav-link">Bienvenido, <?php echo $_SESSION['user']['fullname']; ?></span>
+                    <span class="nav-link">Bienvenido, <?php echo $_SESSION['fullname']; ?></span>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/backend/logout.php">Cerrar sesión</a>
